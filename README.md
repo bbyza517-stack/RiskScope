@@ -1,22 +1,35 @@
 # RiskScope – Cryptocurrency Risk Analysis API
 
-## 1. Project Overview
+RiskScope is a REST API developed with **Python and FastAPI** to analyze cryptocurrency market data and estimate risk levels.
 
-RiskScope is a cryptocurrency risk analysis application developed using Python and FastAPI.
+The application retrieves market information from the CoinGecko API and provides cryptocurrency search, detailed coin information, risk analysis, comparison, and historical analysis records.
 
-The application retrieves real-time cryptocurrency market data from CoinGecko API and provides market information, risk analysis, coin search, and comparison features.
+## Features
 
-## 2. Technologies Used
+- Retrieve the top 10 cryptocurrencies by market data
+- Get detailed information about individual cryptocurrencies
+- Search for cryptocurrencies by name
+- Calculate risk scores between 0 and 100
+- Classify risk levels as Low, Medium, or High
+- Compare two cryptocurrencies
+- Store risk analysis results in an SQLite database
+- Retrieve previous analysis records
+- Access interactive API documentation through Swagger UI
 
-- Python 3.12
-- FastAPI
-- SQLModel
-- SQLite
-- HTTPX
-- CoinGecko API
-- Uvicorn
+## Technologies Used
 
-## 3. Project Structure
+| Technology | Purpose |
+|---|---|
+| Python 3.12 | Main programming language |
+| FastAPI | REST API development |
+| CoinGecko API | Cryptocurrency market data |
+| HTTPX | Asynchronous HTTP requests |
+| SQLModel | Database models and ORM |
+| SQLite | Data storage |
+| Uvicorn | ASGI server |
+| python-dotenv | Environment variable management |
+
+## Project Structure
 
 ```text
 RiskScope/
@@ -28,76 +41,91 @@ RiskScope/
 │   ├── models.py
 │   └── risk.py
 │
-├── .env
+├── .gitignore
 ├── requirements.txt
-├── riskscope.db
 └── README.md
 ```
 
-## 4. Features
-
-- Cryptocurrency market data retrieval
-- Individual coin details
-- Cryptocurrency search
-- Risk score calculation
-- Risk level classification (Low, Medium, High)
-- Comparison between two cryptocurrencies
-- SQLite database integration
-- Historical risk analysis records
-- Automatic API documentation with Swagger UI
-
-## 5. API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/` | Welcome message |
-| GET | `/coins` | Retrieve top 10 cryptocurrencies |
-| GET | `/coins/{coin_id}` | Get coin details |
-| GET | `/coins/{coin_id}/risk` | Analyze cryptocurrency risk |
-| GET | `/history` | Retrieve previous analyses |
-| GET | `/search?query=bitcoin` | Search cryptocurrencies |
-| GET | `/compare?coin1=bitcoin&coin2=ethereum` | Compare two cryptocurrencies |
+| GET | `/` | Returns the API welcome message |
+| GET | `/coins` | Retrieves the top 10 cryptocurrencies |
+| GET | `/coins/{coin_id}` | Returns detailed coin information |
+| GET | `/coins/{coin_id}/risk` | Calculates and stores a coin's risk analysis |
+| GET | `/search?query=bitcoin` | Searches for cryptocurrencies |
+| GET | `/compare?coin1=bitcoin&coin2=ethereum` | Compares two cryptocurrencies |
+| GET | `/history` | Retrieves previously saved risk analyses |
 
-## 6. Installation
+## Risk Analysis Model
 
-Clone the repository:
+RiskScope calculates a risk score using selected cryptocurrency market indicators:
+
+- **Price Volatility:** Evaluates the absolute 24-hour price change.
+- **Market Capitalization:** Considers the market capitalization of the cryptocurrency.
+- **Trading Volume:** Evaluates trading volume as a liquidity indicator.
+
+The scoring model uses the following maximum point allocations:
+
+| Factor | Maximum Points |
+|---|---:|
+| Price Volatility | 35 |
+| Market Capitalization | 30 |
+| Trading Volume | 25 |
+| Base Risk | 10 |
+| **Total** | **100** |
+
+The final score is classified into three risk levels:
+
+| Score | Risk Level |
+|---|---|
+| 0–24 | Low |
+| 25–54 | Medium |
+| 55–100 | High |
+
+This is an educational risk estimation model and should not be considered professional financial advice.
+
+## Installation
+
+### 1. Clone the repository
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/bbyza517-stack/RiskScope.git
 cd RiskScope
 ```
 
-Create a virtual environment:
+### 2. Create a virtual environment
 
 ```bash
 py -3.12 -m venv venv
 ```
 
-Activate the environment:
+### 3. Activate the virtual environment
+
+For Windows:
 
 ```bash
 venv\Scripts\activate
 ```
 
-Install dependencies:
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 7. Environment Variables
+## Environment Configuration
 
-Create a `.env` file in the project root directory.
-
-Add your CoinGecko Demo API key:
+Create a `.env` file in the root directory of the project and add your CoinGecko API key:
 
 ```env
 COINGECKO_API_KEY=your_api_key_here
 ```
 
-Do not share or upload your API key.
+**Important:** Keep your API key private. Do not upload your `.env` file to GitHub.
 
-## 8. Run the Application
+## Running the Application
 
 Start the development server:
 
@@ -105,17 +133,29 @@ Start the development server:
 fastapi dev app/main.py
 ```
 
-Open the API documentation:
+After starting the server, the API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+## API Documentation
+
+RiskScope provides interactive API documentation through Swagger UI.
+
+Open the following address in your browser:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-## 9. Database
+You can test the available endpoints directly from the Swagger interface.
 
-RiskScope uses SQLite with SQLModel to store cryptocurrency risk analysis records.
+## Database
 
-Each analysis stores:
+RiskScope uses **SQLite** and **SQLModel** to store historical risk analysis results.
+
+Each saved analysis includes:
 
 - Coin name
 - Symbol
@@ -124,18 +164,10 @@ Each analysis stores:
 - Risk level
 - Analysis date
 
-## 10. Risk Analysis
+The `/history` endpoint provides access to previously stored analysis records.
 
-The application calculates a risk score based on selected market indicators:
+## Project Purpose
 
-- Price change
-- Market capitalization
-- Trading volume
+RiskScope was developed as an educational software engineering project to practice REST API development, asynchronous programming, external API integration, database management, and data analysis.
 
-The score ranges from 0 to 100 and is classified into Low, Medium, and High risk levels.
-
-The scoring algorithm is an educational model and does not represent professional financial advice.
-
-## 11. Project Purpose
-
-This project was developed for educational purposes to practice REST API development, external API integration, database management, and cryptocurrency market data analysis.
+The project demonstrates how cryptocurrency market data can be retrieved, processed, analyzed, and stored through a structured REST API.
